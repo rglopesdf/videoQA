@@ -30,7 +30,7 @@ class OpenAI_LLM(LLMBase):
             messages = [{"role": "user", "content": prompt}]
         
         start_time = time.time()
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=0.0
