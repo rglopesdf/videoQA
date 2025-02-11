@@ -34,7 +34,12 @@ def show_inspection_images(llm_response, video_frames, frames_per_batch):
         except Exception as e:
             print("Erro ao processar o par", pair, ":", e)
 
-def save_experiment_statistics(experiments_results, final_inspection, csv_filename, 
+import os
+import csv
+import json
+import pandas as pd
+
+def save_experiment_statistics(experiments_results, csv_filename, 
                                llm_model, batch_size, pipeline, runs, youtube_url):
     """
     Salva (ou acrescenta) as estatísticas dos experimentos em um arquivo CSV.
@@ -71,6 +76,34 @@ def save_experiment_statistics(experiments_results, final_inspection, csv_filena
 
         # Itera sobre cada execução (run)
         for run in experiments_results.get("runs", []):
+            final_inspection_data = run.get("final_inspection", "{}")
+
+            # Se for uma string, tenta converter usando json.loads()
+            if isinstance(final_inspection_data, str):
+                try:
+                    final_inspection = json.loads(final_inspection_data)
+                except json.JSONDecodeError:
+                    print(f"Erro ao decodificar JSON na execução {run.get('experiment_run')}")
+                    final_inspection = {}
+            # Se for uma lista, tenta pegar o primeiro elemento (convertendo-o se necessário)
+            elif isinstance(final_inspection_data, list):
+                try:
+                    elem = final_inspection_data[0]
+                    if isinstance(elem, str):
+                        final_inspection = json.loads(elem)
+                    else:
+                        final_inspection = elem
+                except (IndexError, json.JSONDecodeError):
+                    print(f"Erro ao processar `final_inspection` na execução {run.get('experiment_run')}")
+                    final_inspection = {}
+            else:
+                final_inspection = final_inspection_data
+
+            # Se, após o processamento, final_inspection ainda for uma lista,
+            # pega o primeiro elemento (ou usa {} se estiver vazia)
+            if isinstance(final_inspection, list):
+                final_inspection = final_inspection[0] if final_inspection else {}
+
             writer.writerow({
                 "youtube_url": youtube_url,
                 "experiment_run": run.get("experiment_run"),

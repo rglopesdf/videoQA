@@ -33,7 +33,7 @@ class OpenAI_LLM(LLMBase):
         response = openai.chat.completions.create(
             model=self.model,
             messages=messages,
-            temperature=0.0
+            #temperature=0.0
         )
         end_time = time.time()
 
