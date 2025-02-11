@@ -21,7 +21,9 @@ class PromptManager:
         """
         Retorna o prompt de inspeção final combinando as descrições (texto) dos frames.
         """
-        return self.inspection_prompt.format(descriptions=descriptions)
+        safe_descriptions = descriptions.replace("{", "{{").replace("}", "}}")
+        return self.inspection_prompt.format(descriptions=safe_descriptions)
+        # return self.inspection_prompt.format(descriptions=descriptions)
 
     def get_inspection_messages(self, base64_frames, batch_sequence, pipeline="A"):
         """
