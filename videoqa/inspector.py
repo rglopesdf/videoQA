@@ -50,7 +50,7 @@ class VideoInspector:
             )
             result = self.llm.run_prompt(prompt_messages)
             batch_results.append(result["output"])
-            total_tokens += result["token_usage"].get('total_tokens', 0)
+            total_tokens += result["token_usage"].total_tokens
             total_time += result["processing_time"]
             video_time_current += self.batch_size
             batch_sequence += 1
@@ -66,7 +66,7 @@ class VideoInspector:
             "content": self.prompt_manager.rewrite_prompt.format(inspections=combined_text)
         }]
         final_result = self.llm.run_prompt(rewrite_prompt_message)
-        total_tokens += final_result["token_usage"].get('total_tokens', 0)
+        total_tokens += final_result["token_usage"].total_tokens
         total_time += final_result["processing_time"]
 
         return {
@@ -95,7 +95,7 @@ class VideoInspector:
             result = self.llm.run_prompt(prompt_messages)
             batch_results.append(result["output"])
 
-            total_tokens += result["token_usage"].get('total_tokens', 0)
+            total_tokens += result["token_usage"].total_tokens
             total_time += result["processing_time"]
             video_time_current += self.batch_size
             batch_sequence += 1
@@ -110,7 +110,7 @@ class VideoInspector:
             "content": self.prompt_manager.get_inspection_prompt(descriptions=combined_text)
         }]
         final_result = self.llm.run_prompt(rewrite_prompt_message)
-        total_tokens += final_result["token_usage"].get('total_tokens', 0)
+        total_tokens += final_result["token_usage"].total_tokens
         total_time += final_result["processing_time"]
 
         return {
