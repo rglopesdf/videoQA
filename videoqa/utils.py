@@ -40,7 +40,7 @@ import json
 import pandas as pd
 
 def save_experiment_statistics(experiments_results, csv_filename, 
-                               llm_model, batch_size, pipeline, runs, youtube_url):
+                               llm_model, batch_size, pipeline, runs, youtube_url, useFewshot = False ):
     """
     Salva (ou acrescenta) as estatísticas dos experimentos em um arquivo CSV.
     Retorna um DataFrame com as estatísticas consolidadas.
@@ -64,7 +64,8 @@ def save_experiment_statistics(experiments_results, csv_filename,
         "cnae_classe_descricao",
         "cnae_subclasse",
         "cnae_subclasse_descricao",
-        "reasoning"
+        "reasoning",
+        "useFewshot"
     ]
 
     file_exists = os.path.exists(csv_filename)
@@ -123,7 +124,8 @@ def save_experiment_statistics(experiments_results, csv_filename,
                 "cnae_classe_descricao": final_inspection.get("cnae_classe_descricao"),
                 "cnae_subclasse": final_inspection.get("cnae_subclasse"),
                 "cnae_subclasse_descricao": final_inspection.get("cnae_subclasse_descricao"),
-                "reasoning": final_inspection.get("reasoning")
+                "reasoning": final_inspection.get("reasoning"),
+                "useFewshot": useFewshot
             })
 
     print(f"\nEstatísticas dos experimentos foram salvas (ou atualizadas) no arquivo '{csv_filename}'.")
