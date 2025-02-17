@@ -38,7 +38,7 @@ class OpenAI_LLM(LLMBase):
         )
         end_time = time.time()
 
-        output_text = response.choices[0].message.content
+        output_text = response.choices[0].message.content.replace("```json", "").replace("```", "").strip()
         token_usage = response.usage
         return {
             "output": output_text,
