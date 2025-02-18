@@ -1,0 +1,5 @@
+openai==0.27.0
+yt_dlp==2023.01.06
+opencv-python==4.6.0.66
+pandas==1.5.3
+IPython==8.7.0
