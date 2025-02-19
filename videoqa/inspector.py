@@ -150,26 +150,6 @@ class VideoInspectorGemini:
         total_tokens = 0
         total_time = 0
 
-        json_mask = """
-        {
-          "cnae": "EX: 62.01-1-00",
-          "cnae_divisao": "62",
-          "cnae_divisao_descricao": "Descrição da divisao",
-          "cnae_grupo": "01",
-          "cnae_grupo_descricao": "Descrição do grupo",
-          "cnae_classe": "1",
-          "cnae_classe_descricao": "Descrição da classe",
-          "cnae_subclasse": "00",
-          "cnae_subclasse_descricao": "Descrição da subclasse",
-          "reasoning": "Texto explicando como os elementos visuais indicam o código CNAE. Seja muito sucinto nesta explicação",
-          "images": [
-            [frame_index, batch_sequence],
-            [frame_index, batch_sequence],
-            ...
-          ]
-        }
-
-        """
         # Envia lotes de frames
 
         prompt_messages=[
@@ -183,18 +163,8 @@ class VideoInspectorGemini:
                 "role": "user",
                 "parts": [
                     (
-                        "### Contexto ###\n"
-                        "Você é um especialista em análise visual e sua tarefa é responder à pergunta abaixo, "
-                        "com base nas imagens disponibilizadas.\n"
-                        "Pergunta: Baseado nas imagens, estime qual é o código CNAE do empreendimento, segundo a classificação nacional de "
-                        "atividades econômicas do Brasil?\n"
-                        "Responda com a máscara completa: Divisão, Grupo, Classe e Subclasse (X.XX-XX-X). "
-                        "Responda apenas UM CNAE. Se houver várias atividades, informe APENAS o CNAE predominante.\n"
-                        "Informe a lista de imagens que justificam sua resposta. Seja muito sucinto, informando apenas "
-                        "as imagens imprescindíveis para dar credibilidade à sua resposta. NUNCA apresente mais do que 10 imagens."
-                      f"Lista de CNAEs: {self.prompt_manager.few_shot_cnaes}"
-                      f"Retorne a resposta no seguinte formato JSON, sem delimitadores de bloco de código: {json_mask}"                    
-                    )
+                      self.prompt_manager.inspection_prompt
+                   )
                         ],
               }
                 ]
